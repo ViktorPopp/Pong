@@ -1,0 +1,13 @@
+# Output directories
+bin/
+obj/
+
+# Visual Studio cache directory
+.vs/
+
+# Visual Studio solution
+*.sln
+*.user
+*.vcxproj
+*.filters
+
