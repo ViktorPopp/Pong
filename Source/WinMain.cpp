@@ -57,8 +57,9 @@ int __stdcall WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 		}
 
 		/* Update */
-		Renderer::ClearScreen(0xff5500);
-		Renderer::DrawRectInPixels(0, 0, 20, 100, 0x000000);
+		Renderer::ClearScreen(0x000000);
+		Renderer::DrawRectInPixels(0, 0, 20, 100, 0xffffff);
+		Renderer::DrawRect(0, 0, 10, 10, 0xffffff);
 
 		/* Render */
 		StretchDIBits(hdevice, 0, 0, rendererStorage.bufferWidth, rendererStorage.bufferHeight, 0, 0, rendererStorage.bufferWidth, rendererStorage.bufferHeight, rendererStorage.bufferMemory, &rendererStorage.bitmapInfo, DIB_RGB_COLORS, SRCCOPY);

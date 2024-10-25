@@ -4,24 +4,26 @@
 #include "Utils.h"
 
 struct RendererStorage {
-	uint32_t bufferWidth;
-	uint32_t bufferHeight;
-	uint32_t bufferSize;
-	LPVOID bufferMemory;
-	BITMAPINFO bitmapInfo;
+	uint32_t bufferWidth = 0;
+	uint32_t bufferHeight = 0;
+	uint32_t bufferSize = 0;
+	LPVOID bufferMemory = 0;
+	BITMAPINFO bitmapInfo = BITMAPINFO();
+	float renderScale = 0.01f;
 };
 
 RendererStorage rendererStorage;
 
 struct Renderer {
 	static void ClearScreen(uint32_t color) {
-		unsigned int* pixel = (uint32_t*)rendererStorage.bufferMemory;
-		for (int y = 0; y < rendererStorage.bufferHeight; y++) {
-			for (int x = 0; x < rendererStorage.bufferWidth; x++) {
+		uint32_t* pixel = (uint32_t*)rendererStorage.bufferMemory;
+		for (uint32_t y = 0; y < rendererStorage.bufferHeight; y++) {
+			for (uint32_t x = 0; x < rendererStorage.bufferWidth; x++) {
 				*pixel++ = color;
 			}
 		}
 	}
+
 	static void DrawRectInPixels(int x0, int y0, int x1, int y1, uint32_t color) { 
 		x0 = Clamp(0, x0, rendererStorage.bufferWidth);
 		x1 = Clamp(0, x1, rendererStorage.bufferWidth);
@@ -35,5 +37,23 @@ struct Renderer {
 			}
 		}
 	}
-	static void DrawRect() { }
+
+	static void DrawRect(float x, float y, float half_size_x, float half_size_y, uint32_t color) {
+		x *= rendererStorage.bufferHeight * rendererStorage.renderScale;
+		y *= rendererStorage.bufferHeight * rendererStorage.renderScale;
+		half_size_x *= rendererStorage.bufferHeight * rendererStorage.renderScale;
+		half_size_y *= rendererStorage.bufferHeight * rendererStorage.renderScale;
+
+		x += rendererStorage.bufferWidth / 2.f;
+		y += rendererStorage.bufferHeight / 2.f;
+
+#pragma warning(push, 0)
+		int x0 = x - half_size_x;
+		int x1 = x + half_size_x;
+		int y0 = y - half_size_y;
+		int y1 = y + half_size_y;
+#pragma warning(pop)
+
+		DrawRectInPixels(x0, y0, x1, y1, color);
+	}
 };
